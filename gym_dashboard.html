@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gym Dashboard — Lucas</title>
+<style>
+  :root {
+    --bg:       #0d1117;
+    --surface:  #161b27;
+    --surface2: #1e2538;
+    --border:   #2a3050;
+    --text:     #e2e8f0;
+    --muted:    #64748b;
+    --teal:     #00d4aa;
+    --amber:    #f59e0b;
+    --red:      #ef4444;
+    --blue:     #3b82f6;
+    --teal-dim: #00d4aa22;
+    --amber-dim:#f59e0b22;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── LAYOUT ─────────────────────────────────────────────────── */
+  .shell {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* ── HEADER ─────────────────────────────────────────────────── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .header-left h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+  .header-left h1 span { color: var(--teal); }
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .badge-teal  { color: var(--teal);  border-color: var(--teal); background: var(--teal-dim); }
+  .badge-amber { color: var(--amber); border-color: var(--amber); background: var(--amber-dim); }
+  .badge-blue  { color: var(--blue);  border-color: var(--blue);  background: #3b82f622; }
+  .badge-muted { color: var(--muted); border-color: var(--border); background: transparent; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .file-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .file-btn:hover { border-color: var(--teal); background: var(--surface); }
+  #data-status { font-size: 12px; color: var(--muted); }
+
+  /* ── TABS ────────────────────────────────────────────────────── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+  .tab-btn {
+    padding: 8px 20px;
+    border-radius: 8px 8px 0 0;
+    background: none;
+    border: 1px solid transparent;
+    border-bottom: none;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color .15s;
+    position: relative;
+    bottom: -1px;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--teal);
+    border-color: var(--border);
+    border-bottom-color: var(--bg);
+    background: var(--bg);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── VOLUME TABLE ─────────────────────────────────────────────── */
+  .vol-section-header {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 18px 0 8px;
+  }
+  .vol-section-header:first-child { padding-top: 4px; }
+  table.vol-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table.vol-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  table.vol-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.vol-table tr:last-child td { border-bottom: none; }
+  table.vol-table tr:hover td { background: var(--surface); }
+
+  .muscle-name {
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+  .total-num {
+    font-size: 18px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .total-num.optimal { color: var(--teal); }
+  .total-num.below   { color: var(--amber); }
+
+  /* progress bar */
+  .bar-wrap {
+    position: relative;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    min-width: 140px;
+    overflow: visible;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width .4s ease;
+  }
+  .bar-fill.optimal { background: var(--teal); }
+  .bar-fill.below   { background: var(--amber); }
+  .bar-tick {
+    position: absolute;
+    top: -3px;
+    width: 2px;
+    height: 14px;
+    background: var(--border);
+    border-radius: 1px;
+    left: 50%; /* 10/20 = 50% */
+    transform: translateX(-50%);
+  }
+
+  .objetivo-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .exercises-text {
+    color: var(--muted);
+    font-size: 12px;
+    max-width: 260px;
+  }
+
+  /* ── PROGRESS GRID ───────────────────────────────────────────── */
+  #no-data-msg {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  #no-data-msg .drop-icon { font-size: 48px; margin-bottom: 16px; }
+  #no-data-msg p { font-size: 15px; margin-bottom: 8px; color: var(--text); }
+  #no-data-msg small { font-size: 13px; }
+
+  .progress-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 720px) {
+    .progress-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .progress-grid { grid-template-columns: 1fr; }
+  }
+
+  .progress-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    transition: border-color .15s;
+  }
+  .progress-card:hover { border-color: var(--teal); }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .card-muscle {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .card-delta {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .delta-up   { color: var(--teal); background: var(--teal-dim); }
+  .delta-flat { color: var(--muted); background: var(--surface2); }
+  .delta-down { color: var(--red);  background: #ef444422; }
+
+  .card-index {
+    font-size: 28px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+  }
+  .card-index.up   { color: var(--teal); }
+  .card-index.flat { color: var(--muted); }
+  .card-index.down { color: var(--red); }
+
+  .card-sparkline {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+  }
+  .card-sparkline svg {
+    display: block;
+    width: 100%;
+  }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .card-weeks {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .card-start {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* Section dividers within progress */
+  .prog-section {
+    margin-bottom: 6px;
+  }
+  .prog-section-header {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 20px 0 10px;
+  }
+
+  /* ── MODE TOOLBAR ───────────────────────────────────────────── */
+  .mode-toolbar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .mode-btn {
+    padding: 5px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .mode-btn:hover { color: var(--text); border-color: var(--text); }
+  .mode-btn.active { background: var(--teal); border-color: var(--teal); color: var(--bg); }
+
+  /* ── EXERCISE BREAKDOWN (inside progress card) ──────────────── */
+  .card-breakdown {
+    border-top: 1px solid var(--border);
+    margin-top: 10px;
+    padding-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .ex-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    min-width: 0;
+  }
+  .ex-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .ex-dot.direct   { background: var(--teal); }
+  .ex-dot.indirect { background: var(--muted); opacity: 0.55; }
+  .ex-name {
+    flex: 1;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ex-idx {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    font-size: 11.5px;
+  }
+
+  /* ── DRAG OVERLAY ────────────────────────────────────────────── */
+  #drop-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,17,23,.88);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  #drop-overlay.active { display: flex; }
+  .drop-box {
+    border: 2px dashed var(--teal);
+    border-radius: 20px;
+    padding: 60px 80px;
+    text-align: center;
+    pointer-events: none;
+  }
+  .drop-box .drop-icon { font-size: 52px; display: block; margin-bottom: 16px; }
+  .drop-box p { font-size: 18px; font-weight: 600; color: var(--teal); }
+  .drop-box small { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="header-left">
+      <h1>Gym <span>Dashboard</span></h1>
+      <div class="meta-row">
+        <span id="last-workout" class="badge badge-muted">—</span>
+        <span id="data-status">Sin datos — sube el CSV</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <label class="file-btn" for="csv-input">
+        📂 Cargar CSV
+        <input type="file" id="csv-input" accept=".csv" style="display:none">
+      </label>
+    </div>
+  </header>
+
+  <!-- ── TABS ── -->
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="volumen">Volumen</button>
+    <button class="tab-btn" data-tab="progreso">Progreso</button>
+  </nav>
+
+  <!-- ── TAB: VOLUMEN ── -->
+  <div id="tab-volumen" class="tab-panel active">
+    <div id="vol-content"></div>
+  </div>
+
+  <!-- ── TAB: PROGRESO ── -->
+  <div id="tab-progreso" class="tab-panel">
+    <div class="mode-toolbar">
+      <button class="mode-btn active" data-mode="3m">Últimos 3 meses</button>
+      <button class="mode-btn" data-mode="all">Todo el historial</button>
+    </div>
+    <div id="prog-content">
+      <div id="no-data-msg">
+        <div class="drop-icon">📊</div>
+        <p>Carga tu CSV de Hevy para ver el progreso</p>
+        <small>Haz clic en "Cargar CSV" o arrastra el archivo aquí</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DRAG OVERLAY ── -->
+<div id="drop-overlay">
+  <div class="drop-box">
+    <span class="drop-icon">💾</span>
+    <p>Suelta el workout_data.csv</p>
+    <small>Se actualizará automáticamente</small>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════════
+
+const TABLE_GROUPS = {
+  "Bench Press (Barbell)":          [["Pecho", 1.0], ["Tríceps", 0.5]],
+  "Chest Fly (Machine)":            [["Pecho", 1.0]],
+  "Incline Bench Press (Dumbbell)": [["Pecho", 1.0], ["Tríceps", 0.5]],
+  "Lateral Raise (Dumbbell)":       [["Hombros", 1.0]],
+  "Face Pull":                      [["Hombros", 1.0]],
+  "Upright Row (Cable)":            [["Hombros", 1.0]],
+  "Upright Row (Barbell)":          [["Hombros", 1.0]],  // Hevy uses this name
+  "Cable Lateral Raise":            [["Hombros", 1.0]],
+  "Triceps Extension (Dumbbell)":   [["Tríceps", 1.0]],
+  "Lat Pulldown (Cable)":           [["Espalda", 1.0], ["Bíceps", 0.5]],
+  "Single Arm Cable Row":           [["Espalda", 1.0], ["Bíceps", 0.5]],
+  "Bent Over Row (Barbell)":        [["Espalda", 1.0], ["Bíceps", 0.5]],
+  "Bicep Curl (Dumbbell)":          [["Bíceps", 1.0]],
+  "Crunch (Weighted)":              [["Abdominales", 1.0]],
+  "Dragonfly":                      [["Abdominales", 1.0]],
+  "Side Bend (Dumbbell)":           [["Abdominales", 1.0]],
+  "Cable Woodchopper":              [["Abdominales", 1.0]],
+  "Romanian Deadlift (Barbell)":    [["Isquiotibiales", 1.0], ["Glúteos", 0.5]],
+  "Hip Thrust (Barbell)":           [["Glúteos", 1.0]],
+  "Bulgarian Split Squat":          [["Cuádriceps", 1.0], ["Glúteos", 0.5]],
+  "Bulgarian Split Squat (Dumbbell)":[["Cuádriceps", 1.0], ["Glúteos", 0.5]],
+  "Hack Squat (Machine)":           [["Cuádriceps", 1.0], ["Glúteos", 0.5]],
+  "Leg Extension (Machine)":        [["Cuádriceps", 1.0]],
+  "Seated Leg Curl (Machine)":      [["Isquiotibiales", 1.0]],
+  // Retired exercises — still count for the periods when they were performed
+  "EZ Bar Biceps Curl":                        [["Bíceps", 1.0]],
+  "Triceps Pushdown":                          [["Tríceps", 1.0]],
+  "Seated Shoulder Press (Machine)":           [["Hombros", 1.0]],
+  "Back Extension (Weighted Hyperextension)":  [["Glúteos", 0.5]],
+};
+
+const PROGRESS_SECTIONS = [
+  {
+    header: "Tren superior — empuje",
+    groups: ["Pecho", "Hombros", "Tríceps"]
+  },
+  {
+    header: "Tren superior — jalón",
+    groups: ["Espalda", "Bíceps", "Abdominales"]
+  },
+  {
+    header: "Tren inferior",
+    groups: ["Glúteos", "Cuádriceps", "Isquiotibiales"]
+  },
+];
+
+const ALL_GROUPS = PROGRESS_SECTIONS.flatMap(s => s.groups);
+
+const VOLUME_SECTIONS = [
+  {
+    header: "Tren superior — empuje",
+    rows: [
+      { name: "Pecho",        total: 12, exercises: "Bench Press, Chest Fly, Incline Press" },
+      { name: "Hombros",      total: 12, exercises: "Lateral Raise, Face Pull, Upright Row, Cable Lat. Raise" },
+      { name: "Tríceps",      total: 11, exercises: "Bench Press (ind), Incline Press (ind), Triceps Ext" },
+    ]
+  },
+  {
+    header: "Tren superior — jalón",
+    rows: [
+      { name: "Espalda",      total: 10, exercises: "Lat Pulldown, Cable Row, Bent Row" },
+      { name: "Bíceps",       total: 13, exercises: "Lat Pulldown (ind), Cable Row (ind), Bent Row (ind), Bicep Curl" },
+      { name: "Abdominales",  total: 10, exercises: "Crunch, Dragonfly, Woodchopper / Side Bend" },
+    ]
+  },
+  {
+    header: "Tren inferior",
+    rows: [
+      { name: "Glúteos",         total: 15, exercises: "RDL (ind), Hip Thrust, BSS (ind), Hack Squat (ind)" },
+      { name: "Cuádriceps",      total: 10, exercises: "BSS, Hack Squat, Leg Extension" },
+      { name: "Isquiotibiales",  total: 7,  exercises: "RDL, Leg Curl" },
+      { name: "Pantorrillas",    total: 0,  exercises: "Standing Calf Raise", skipped: true },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// CSV PARSING
+// ═══════════════════════════════════════════════════════════════
+
+function parseCSVLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      inQuotes = !inQuotes;
+    } else if (ch === ',' && !inQuotes) {
+      result.push(current);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  result.push(current);
+  return result;
+}
+
+function parseCSV(text) {
+  const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = parseCSVLine(lines[0]).map(h => h.trim());
+  return lines.slice(1).filter(l => l.trim()).map(line => {
+    const vals = parseCSVLine(line);
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = (vals[i] || '').trim(); });
+    return obj;
+  });
+}
+
+const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+function parseDate(s) {
+  // "8 Jul 2026, 18:47"
+  const parts = s.trim().split(/[\s,]+/);
+  // parts: ["8", "Jul", "2026", "18:47"]
+  const day   = parseInt(parts[0], 10);
+  const month = MONTHS[parts[1]];
+  const year  = parseInt(parts[2], 10);
+  const [h, m] = (parts[3] || '0:0').split(':').map(Number);
+  return new Date(year, month, day, h, m);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PROGRESS ENGINE  (port of progress_tracker.py)
+// ═══════════════════════════════════════════════════════════════
+
+function sessionValue(rows) {
+  const weighted = rows.filter(r => r.weight_kg && parseFloat(r.weight_kg) > 0);
+  if (weighted.length) {
+    // Average e1RM per set (Epley: weight × (1 + reps/30))
+    // Using average instead of sum so that adding sets (a programming decision)
+    // doesn't inflate the index — only getting better per set does
+    const total = weighted.reduce((sum, r) =>
+      sum + parseFloat(r.weight_kg) * (1 + parseFloat(r.reps || 0) / 30), 0
+    );
+    return total / weighted.length;
+  }
+  const timed = rows.filter(r => r.duration_seconds && r.duration_seconds !== '');
+  if (timed.length) {
+    return timed.reduce((sum, r) => sum + parseFloat(r.duration_seconds), 0) / timed.length;
+  }
+  const repped = rows.filter(r => r.reps && r.reps !== '');
+  if (repped.length) {
+    return repped.reduce((sum, r) => sum + parseFloat(r.reps), 0) / repped.length;
+  }
+  return null;
+}
+
+function buildExerciseSessions(rows) {
+  const grouped = {};
+  for (const r of rows) {
+    const ex  = r.exercise_title;
+    const key = r.title + '|||' + r.start_time;
+    if (!grouped[ex]) grouped[ex] = {};
+    if (!grouped[ex][key]) grouped[ex][key] = { start_time: r.start_time, rows: [] };
+    grouped[ex][key].rows.push(r);
+  }
+
+  const result = {};
+  for (const [ex, sessions] of Object.entries(grouped)) {
+    const series = [];
+    for (const { start_time, rows: srows } of Object.values(sessions)) {
+      const val = sessionValue(srows);
+      if (val === null) continue;
+      series.push({ date: parseDate(start_time), value: val });
+    }
+    series.sort((a, b) => a.date - b.date);
+    result[ex] = series;
+  }
+  return result;
+}
+
+function chainIndex(series) {
+  const result = [];
+  let prevValue = null;
+  let index = 100;
+  for (const { date, value } of series) {
+    if (prevValue !== null && prevValue !== 0) {
+      index = index * (value / prevValue);
+    }
+    result.push({ date, value, index: Math.round(index * 10) / 10 });
+    prevValue = value;
+  }
+  return result;
+}
+
+// ISO week Monday
+function weekKey(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return d.toISOString().slice(0, 10);
+}
+
+function muscleGroupProgress(rows) {
+  const sessionsByEx = buildExerciseSessions(rows);
+  const relevant = Object.keys(TABLE_GROUPS).filter(ex => sessionsByEx[ex]);
+  if (!relevant.length) return {};
+
+  const chains = {};
+  for (const ex of relevant) {
+    chains[ex] = chainIndex(sessionsByEx[ex]);
+  }
+
+  // Collect all unique timestamps (sorted)
+  const allTS = [...new Set(
+    relevant.flatMap(ex => chains[ex].map(pt => pt.date.getTime()))
+  )].sort((a, b) => a - b);
+
+  // Walk the timeline, tracking last-known index per exercise
+  const lastKnown = {};
+  const ptrs      = {};
+  for (const ex of relevant) { lastKnown[ex] = null; ptrs[ex] = 0; }
+
+  const groupSeries = {};
+  for (const g of ALL_GROUPS) groupSeries[g] = [];
+
+  for (const ts of allTS) {
+    for (const ex of relevant) {
+      while (ptrs[ex] < chains[ex].length && chains[ex][ptrs[ex]].date.getTime() <= ts) {
+        lastKnown[ex] = chains[ex][ptrs[ex]].index;
+        ptrs[ex]++;
+      }
+    }
+    const sums = {}, weights = {};
+    for (const g of ALL_GROUPS) { sums[g] = 0; weights[g] = 0; }
+    for (const ex of relevant) {
+      if (lastKnown[ex] === null) continue;
+      for (const [g, w] of TABLE_GROUPS[ex]) {
+        sums[g]    += w * lastKnown[ex];
+        weights[g] += w;
+      }
+    }
+    const d = new Date(ts);
+    for (const g of ALL_GROUPS) {
+      if (weights[g] > 0) {
+        groupSeries[g].push({ date: d, value: Math.round(sums[g] / weights[g] * 10) / 10 });
+      }
+    }
+  }
+
+  // Per-exercise weekly index (for card breakdown)
+  const exWeekly = {};
+  for (const ex of relevant) {
+    const weekly = {};
+    for (const { date, index } of chains[ex]) {
+      weekly[weekKey(date)] = index;
+    }
+    exWeekly[ex] = Object.entries(weekly).sort(([a], [b]) => a.localeCompare(b));
+  }
+
+  // Resample to weekly (last known that week)
+  const result = {};
+  for (const g of ALL_GROUPS) {
+    const series = groupSeries[g];
+    if (!series.length) continue;
+    const weekly = {};
+    for (const { date, value } of series) {
+      weekly[weekKey(date)] = value;
+    }
+    const sorted = Object.entries(weekly).sort(([a], [b]) => a.localeCompare(b));
+    // Attach per-exercise breakdown for this group
+    const exercises = relevant
+      .filter(ex => TABLE_GROUPS[ex].some(([grp]) => grp === g))
+      .map(ex => {
+        const [, w] = TABLE_GROUPS[ex].find(([grp]) => grp === g);
+        return { name: ex, weight: w, weeklyFull: exWeekly[ex] };
+      });
+    result[g] = { weeklyFull: sorted, exercises };
+  }
+  return result;
+}
+
+// windowWeeks: 13 for 3-month view, null for all-time
+function computeDisplay(weeklyFull, windowWeeks) {
+  const window = windowWeeks ? weeklyFull.slice(-windowWeeks) : weeklyFull;
+  if (!window.length) return null;
+
+  // Re-baseline: first entry in the window = 100
+  const base     = window[0][1];
+  const sparkline = window.map(([, v]) => Math.round(v / base * 1000) / 10);
+  const current   = sparkline.at(-1);
+
+  // Month-over-month delta: current vs 4 weeks ago within the window
+  const momPrev  = sparkline.length >= 5 ? sparkline.at(-5) : sparkline[0];
+  const deltaPct = momPrev ? Math.round((current / momPrev - 1) * 1000) / 10 : 0;
+
+  return { sparkline, current, deltaPct, firstDate: window[0][0], nWeeks: window.length };
+}
+
+function latestWorkoutDate(rows) {
+  let max = null;
+  for (const r of rows) {
+    const d = parseDate(r.start_time);
+    if (!max || d > max) max = d;
+  }
+  return max;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════════════════════════════════
+
+function indexCell(groupName) {
+  const raw = progressData ? progressData[groupName] : null;
+  if (!raw) return `<td style="color:var(--muted);text-align:right;font-size:13px">—</td>`;
+  const p = computeDisplay(raw.weeklyFull, 13); // always 3M in volume tab
+  if (!p) return `<td style="color:var(--muted);text-align:right;font-size:13px">—</td>`;
+  const up   = p.current > 101.5;
+  const down = p.current < 98.5;
+  const col  = up ? 'var(--teal)' : down ? 'var(--red)' : 'var(--muted)';
+  const arrow = up ? '↑' : down ? '↓' : '→';
+  return `<td style="text-align:right;white-space:nowrap">
+    <span style="color:${col};font-weight:700;font-size:15px;font-variant-numeric:tabular-nums">${p.current.toFixed(1)}</span><span style="color:${col};font-size:12px;margin-left:2px">${arrow}</span>
+  </td>`;
+}
+
+function renderVolumeTable() {
+  const el = document.getElementById('vol-content');
+  let html = '<table class="vol-table"><thead><tr>'
+    + '<th>Grupo</th><th>Sets / semana</th><th>Total</th><th>Objetivo</th><th>Ejercicios</th><th style="text-align:right">Índice (3M)</th>'
+    + '</tr></thead><tbody>';
+
+  for (const section of VOLUME_SECTIONS) {
+    html += `<tr><td colspan="6"><div class="vol-section-header">${section.header}</div></td></tr>`;
+    for (const row of section.rows) {
+      if (row.skipped) {
+        html += `<tr style="opacity:0.45">
+          <td><span class="muscle-name">${row.name}
+            <span class="badge badge-muted" style="font-size:10px;">sin entrenar</span>
+          </span></td>
+          <td><div class="bar-wrap"><div class="bar-tick"></div></div></td>
+          <td><span class="total-num" style="color:var(--muted)">—</span></td>
+          <td><span class="objetivo-badge">10–20</span></td>
+          <td><span class="exercises-text">${row.exercises}</span></td>
+          <td></td>
+        </tr>`;
+        continue;
+      }
+      const status = row.total >= 9 ? 'optimal' : 'below';
+      const fillPct = Math.min(100, (row.total / 20) * 100).toFixed(1);
+
+      html += `<tr>
+        <td><span class="muscle-name">${row.name}</span></td>
+        <td>
+          <div class="bar-wrap">
+            <div class="bar-fill ${status}" style="width:${fillPct}%"></div>
+            <div class="bar-tick"></div>
+          </div>
+        </td>
+        <td><span class="total-num ${status}">${row.total}</span></td>
+        <td><span class="objetivo-badge">10–20</span></td>
+        <td><span class="exercises-text">${row.exercises}</span></td>
+        ${indexCell(row.name)}
+      </tr>`;
+    }
+  }
+
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+function shortExName(n) {
+  return n
+    .replace(' (Barbell)', ' (BB)')
+    .replace(' (Dumbbell)', ' (DB)')
+    .replace(' (Machine)', '')
+    .replace(' (Cable)', '')
+    .replace(' (Weighted)', '');
+}
+
+function sparklineSVG(values) {
+  if (!values || values.length < 2) return '<span style="color:var(--muted)">—</span>';
+  const W = 200, H = 40;
+  const min = Math.min(...values), max = Math.max(...values);
+  const range = max - min || 1;
+  const pts = values.map((v, i) => {
+    const x = (i / (values.length - 1)) * (W - 6) + 3;
+    const y = H - 4 - ((v - min) / range) * (H - 10) + 2;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  // Color matches the badge: month-over-month (4 weeks back), same reference
+  const last    = values.at(-1);
+  const momPrev = values[values.length >= 5 ? values.length - 5 : 0];
+  const col = last > momPrev + 0.5 ? 'var(--teal)' : last < momPrev - 0.5 ? 'var(--red)' : 'var(--muted)';
+  const lx  = parseFloat(pts.at(-1).split(',')[0]);
+  const ly  = parseFloat(pts.at(-1).split(',')[1]);
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:40px;display:block">
+    <polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="1.8"
+      stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="3" fill="${col}"/>
+  </svg>`;
+}
+
+function renderProgress(progress, mode) {
+  const windowWeeks = mode === 'all' ? null : 13;
+  const el = document.getElementById('prog-content');
+  if (!progress || !Object.keys(progress).length) {
+    el.innerHTML = `<div id="no-data-msg">
+      <div class="drop-icon">📊</div>
+      <p>Carga tu CSV de Hevy para ver el progreso</p>
+      <small>Haz clic en "Cargar CSV" o arrastra el archivo a esta página</small>
+    </div>`;
+    return;
+  }
+
+  let html = '';
+  for (const section of PROGRESS_SECTIONS) {
+    html += `<div class="prog-section">
+      <div class="prog-section-header">${section.header}</div>
+      <div class="progress-grid">`;
+    for (const g of section.groups) {
+      const raw = progress[g];
+      const p   = raw ? computeDisplay(raw.weeklyFull, windowWeeks) : null;
+      if (!p) {
+        html += `<div class="progress-card"><div class="card-muscle">${g}</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:8px">Sin datos</div></div>`;
+        continue;
+      }
+      const trend    = p.deltaPct > 0.5 ? 'up' : p.deltaPct < -0.5 ? 'down' : 'flat';
+      const sign     = p.deltaPct >= 0 ? '+' : '';
+      const deltaClass = trend === 'up' ? 'delta-up' : trend === 'down' ? 'delta-down' : 'delta-flat';
+      const idxClass   = trend;
+      const idx        = p.current.toFixed(1);
+      const weeks      = p.nWeeks;
+      const firstDate  = p.firstDate;
+      html += `<div class="progress-card">
+        <div class="card-header">
+          <div class="card-muscle">${g}</div>
+          <div style="text-align:right">
+            <span class="card-delta ${deltaClass}">${sign}${p.deltaPct.toFixed(1)}%</span>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px">vs mes anterior</div>
+          </div>
+        </div>
+        <div class="card-index ${idxClass}">${idx}</div>
+        <div class="card-sparkline">${sparklineSVG(p.sparkline)}</div>
+        ${(raw.exercises && raw.exercises.length) ? (() => {
+          let bd = '<div class="card-breakdown">';
+          for (const ex of raw.exercises) {
+            const ep = computeDisplay(ex.weeklyFull, windowWeeks);
+            const exIdx = ep ? ep.current.toFixed(1) : '—';
+            const up = ep && ep.current > 101.5;
+            const dn = ep && ep.current < 98.5;
+            const exCol = up ? 'var(--teal)' : dn ? 'var(--red)' : 'var(--muted)';
+            const dotClass = ex.weight >= 1.0 ? 'direct' : 'indirect';
+            const halfLabel = ex.weight < 1.0 ? '<span style="opacity:.45"> ×½</span>' : '';
+            bd += `<div class="ex-row">
+              <span class="ex-dot ${dotClass}"></span>
+              <span class="ex-name">${shortExName(ex.name)}${halfLabel}</span>
+              <span class="ex-idx" style="color:${exCol}">${exIdx}</span>
+            </div>`;
+          }
+          bd += '</div>';
+          return bd;
+        })() : ''}
+        <div class="card-footer">
+          <span class="card-weeks">${weeks} semanas</span>
+          <span class="card-start">desde ${firstDate}</span>
+        </div>
+      </div>`;
+    }
+    html += '</div></div>';
+  }
+
+  // Legend
+  html += `<div style="margin-top:28px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:12px;line-height:1.7;color:var(--muted)">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text);margin-bottom:10px">Leyenda — cómo leer el índice</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 24px">
+      <div><span style="color:var(--text);font-weight:600">Número grande (índice)</span><br>
+        Empieza en 100 tu primera sesión. Sube o baja proporcionalmente al cambio en el e1RM medio
+        por serie (Epley: peso × (1 + reps/30), promediado sobre todas las series de la sesión).
+        Mejorar series flojas sube el índice; añadir series sin mejorar el rendimiento por serie, no.
+        Más peso > más reps al mismo volumen (el índice tiene sesgo hacia el peso, por diseño).
+        Un índice de 115 significa que tu calidad media por serie ha subido un 15% desde el inicio.
+      </div>
+      <div><span style="color:var(--text);font-weight:600">Porcentaje (% vs mes anterior)</span><br>
+        Compara el índice de esta semana con el de hace 4 semanas. Refleja si estás en racha
+        ascendente, estancado, o bajando en el último mes.
+      </div>
+      <div><span style="color:var(--text);font-weight:600">Gráfica</span><br>
+        Evolución semanal del índice a lo largo de todo el historial.
+        Verde = tendencia alcista en el último punto; rojo = bajada.
+      </div>
+      <div><span style="color:var(--text);font-weight:600">Ponderación</span><br>
+        Cada grupo agrega varios ejercicios: los que lo entrenan directo cuentan ×1.0,
+        los indirectos ×0.5 (según Schoenfeld). Los ejercicios retirados (Triceps Pushdown,
+        EZ Bar Curl, etc.) siguen contando para los períodos en que los hacías — cuando
+        dejas de registrarlos, dejan de contribuir solos.
+      </div>
+    </div>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+function updateHeader(rows) {
+  const last = latestWorkoutDate(rows);
+  if (last) {
+    const opts = { day: 'numeric', month: 'short', year: 'numeric' };
+    document.getElementById('last-workout').textContent =
+      '📅 Último: ' + last.toLocaleDateString('es-ES', opts);
+  }
+  const now = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+  document.getElementById('data-status').textContent =
+    `${rows.length} sets · actualizado ${now}`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MAIN DATA FLOW
+// ═══════════════════════════════════════════════════════════════
+
+function processCSV(text) {
+  try {
+    const rows = parseCSV(text);
+    progressData   = muscleGroupProgress(rows);
+    updateHeader(rows);
+    renderProgress(progressData, displayMode);
+    renderVolumeTable(); // refresh index column with live data
+    // Persist
+    try { localStorage.setItem('gymDashboardCSV', text); } catch(e) {}
+  } catch (err) {
+    alert('Error procesando el CSV: ' + err.message);
+    console.error(err);
+  }
+}
+
+// ── State ──
+
+let progressData = null;
+let displayMode  = '3m';
+
+// ── Init ──
+
+renderVolumeTable();
+
+// Check localStorage for saved CSV
+const saved = (() => { try { return localStorage.getItem('gymDashboardCSV'); } catch(e) { return null; } })();
+if (saved) processCSV(saved);
+
+// ── Mode toggle ──
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.mode === displayMode) return;
+    displayMode = btn.dataset.mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (progressData) renderProgress(progressData, displayMode);
+  });
+});
+
+// ── File input ──
+document.getElementById('csv-input').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => processCSV(ev.target.result);
+  reader.readAsText(file, 'utf-8');
+  e.target.value = '';
+});
+
+// ── Drag & Drop ──
+const overlay = document.getElementById('drop-overlay');
+
+document.addEventListener('dragover', e => { e.preventDefault(); overlay.classList.add('active'); });
+document.addEventListener('dragleave', e => {
+  if (!e.relatedTarget) overlay.classList.remove('active');
+});
+document.addEventListener('drop', e => {
+  e.preventDefault();
+  overlay.classList.remove('active');
+  const file = e.dataTransfer.files[0];
+  if (!file || !file.name.endsWith('.csv')) {
+    alert('Por favor, suelta un archivo .csv');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = ev => processCSV(ev.target.result);
+  reader.readAsText(file, 'utf-8');
+});
+
+// ── Tabs ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
