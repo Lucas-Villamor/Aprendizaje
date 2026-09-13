@@ -378,6 +378,161 @@
     font-size: 11.5px;
   }
 
+  /* ── ROUTINE CARDS ───────────────────────────────────────────── */
+  .routine-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 620px) {
+    .routine-grid { grid-template-columns: 1fr; }
+  }
+  .routine-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 840px) {
+    .routine-grid-3 { grid-template-columns: 1fr; }
+  }
+  .split-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .split-btn {
+    padding: 5px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .split-btn:hover { color: var(--text); border-color: var(--text); }
+  .split-btn.active { background: var(--teal); border-color: var(--teal); color: var(--bg); }
+  .split-section { display: none; }
+  .split-section.active { display: block; }
+  .consecutive-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--teal);
+    font-weight: 600;
+    background: #00d4aa18;
+    border: 1px solid #00d4aa44;
+    border-radius: 999px;
+    padding: 2px 8px;
+    margin-left: 8px;
+  }
+  .split-active-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--teal);
+    color: var(--bg);
+    border-radius: 999px;
+    padding: 1px 7px;
+    margin-left: 6px;
+    vertical-align: middle;
+    letter-spacing: .04em;
+  }
+  .routine-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color .15s;
+  }
+  .routine-card:hover { border-color: var(--teal); }
+  .routine-card-header {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .routine-day-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 3px;
+  }
+  .routine-day-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .routine-set-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px 9px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .routine-exercises {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .routine-ex-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .routine-ex-sets {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--teal);
+    width: 22px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .routine-ex-name { color: var(--text); }
+  .routine-muscles {
+    padding: 10px 16px 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .mpill-ind { opacity: 0.55; font-style: italic; }
+  .mpill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid;
+    opacity: .85;
+  }
+  .routine-note {
+    margin-bottom: 18px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .routine-note b { color: var(--text); }
+
   /* ── DRAG OVERLAY ────────────────────────────────────────────── */
   #drop-overlay {
     display: none;
@@ -426,11 +581,224 @@
   <nav class="tabs">
     <button class="tab-btn active" data-tab="volumen">Volumen</button>
     <button class="tab-btn" data-tab="progreso">Progreso</button>
+    <button class="tab-btn" data-tab="rutina">Rutina</button>
   </nav>
 
   <!-- ── TAB: VOLUMEN ── -->
   <div id="tab-volumen" class="tab-panel active">
     <div id="vol-content"></div>
+  </div>
+
+  <!-- ── TAB: RUTINA ── -->
+  <div id="tab-rutina" class="tab-panel">
+
+    <!-- Split toggle -->
+    <div class="split-toolbar">
+      <button class="split-btn active" data-split="3d">★ 3 días <span class="split-active-badge">ACTIVA</span></button>
+      <button class="split-btn" data-split="4d">4 días</button>
+    </div>
+
+    <!-- ═══ 3-DAY SPLIT (default, visible) ═══ -->
+    <div id="split-3d" class="split-section active">
+      <div class="routine-note">
+        <b>3 días / semana.</b> Todos los ejercicios del split de 4 días, redistribuidos.
+        <b>Día A + Día B</b> son seguros para hacer consecutivos — sin solapamiento muscular directo.
+        Ejemplo: martes · miércoles · viernes.
+      </div>
+      <div class="routine-grid-3">
+
+        <!-- DÍA A -->
+        <div class="routine-card">
+          <div class="routine-card-header">
+            <div>
+              <div class="routine-day-num">Día A</div>
+              <div class="routine-day-label">Upper + Accesorios</div>
+            </div>
+            <span class="routine-set-count">22 sets</span>
+          </div>
+          <div class="routine-exercises">
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Bench Press (Smith Machine)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Chest Fly (Dumbbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Face Pull</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bicep Curl (Dumbbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Triceps Extension (Dumbbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span></div>
+          </div>
+          <div class="routine-muscles">
+            <span class="mpill" style="color:#3b82f6;border-color:#3b82f6;background:#3b82f622">Pecho ×8</span>
+            <span class="mpill" style="color:#f59e0b;border-color:#f59e0b;background:#f59e0b22">Hombros ×6</span>
+            <span class="mpill" style="color:#06b6d4;border-color:#06b6d4;background:#06b6d422">Bíceps ×3</span>
+            <span class="mpill" style="color:#a78bfa;border-color:#a78bfa;background:#a78bfa22">Tríceps ×3</span>
+            <span class="mpill" style="color:#10b981;border-color:#10b981;background:#10b98122">Abdominales ×4</span>
+          </div>
+        </div>
+
+        <!-- DÍA B -->
+        <div class="routine-card">
+          <div class="routine-card-header">
+            <div>
+              <div class="routine-day-num">Día B</div>
+              <div class="routine-day-label">Full Legs <span class="consecutive-note">✓ seg. tras A</span></div>
+            </div>
+            <span class="routine-set-count">21 sets</span>
+          </div>
+          <div class="routine-exercises">
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Smith Machine Squat</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bulgarian Split Squat (Dumbbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Romanian Deadlift (Barbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Seated Leg Curl (Machine)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Leg Extension (Machine)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span></div>
+          </div>
+          <div class="routine-muscles">
+            <span class="mpill" style="color:#8b5cf6;border-color:#8b5cf6;background:#8b5cf622">Cuádriceps ×10</span>
+            <span class="mpill" style="color:#f97316;border-color:#f97316;background:#f9731622">Isquiotibiales ×7</span>
+            <span class="mpill" style="color:#10b981;border-color:#10b981;background:#10b98122">Abdominales ×4</span>
+            <span class="mpill mpill-ind" style="color:#ec4899;border-color:#ec4899;background:#ec489922">Glúteos (ind)</span>
+          </div>
+        </div>
+
+        <!-- DÍA C -->
+        <div class="routine-card">
+          <div class="routine-card-header">
+            <div>
+              <div class="routine-day-num">Día C</div>
+              <div class="routine-day-label">Upper B + Full Pull</div>
+            </div>
+            <span class="routine-set-count">21 sets</span>
+          </div>
+          <div class="routine-exercises">
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Incline Bench Press (Dumbbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Chest Fly</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Lat Pulldown (Cable)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Seated Cable Row - V Grip</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bent Over Row (Barbell)</span></div>
+          </div>
+          <div class="routine-muscles">
+            <span class="mpill" style="color:#3b82f6;border-color:#3b82f6;background:#3b82f622">Pecho ×7</span>
+            <span class="mpill" style="color:#f59e0b;border-color:#f59e0b;background:#f59e0b22">Hombros ×3</span>
+            <span class="mpill" style="color:#00d4aa;border-color:#00d4aa;background:#00d4aa22">Espalda ×11</span>
+            <span class="mpill mpill-ind" style="color:#06b6d4;border-color:#06b6d4;background:#06b6d422">Bíceps (ind)</span>
+          </div>
+        </div>
+
+      </div><!-- /routine-grid-3 -->
+    </div><!-- /split-3d -->
+
+    <!-- ═══ 4-DAY SPLIT (hidden by default) ═══ -->
+    <div id="split-4d" class="split-section">
+      <div class="routine-note">
+        <b>4 días / semana.</b> Funciona en días consecutivos o alternos — ningún músculo se trabaja directamente dos días seguidos por diseño.
+        Tren inferior: <b>D2</b> (cuádriceps) y <b>D4</b> (posterior), no consecutivos.
+      </div>
+      <div class="routine-grid">
+
+        <!-- DÍA 1 -->
+        <div class="routine-card">
+          <div class="routine-card-header">
+            <div>
+              <div class="routine-day-num">Día 1</div>
+              <div class="routine-day-label">Push A</div>
+            </div>
+            <span class="routine-set-count">18 sets</span>
+          </div>
+          <div class="routine-exercises">
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Bench Press (Smith Machine)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Chest Fly (Dumbbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Face Pull</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span></div>
+          </div>
+          <div class="routine-muscles">
+            <span class="mpill" style="color:#3b82f6;border-color:#3b82f6;background:#3b82f622">Pecho ×8</span>
+            <span class="mpill" style="color:#f59e0b;border-color:#f59e0b;background:#f59e0b22">Hombros ×6</span>
+            <span class="mpill" style="color:#10b981;border-color:#10b981;background:#10b98122">Abdominales ×4</span>
+            <span class="mpill mpill-ind" style="color:#a78bfa;border-color:#a78bfa;background:#a78bfa22">Tríceps (ind)</span>
+          </div>
+        </div>
+
+        <!-- DÍA 2 -->
+        <div class="routine-card">
+          <div class="routine-card-header">
+            <div>
+              <div class="routine-day-num">Día 2</div>
+              <div class="routine-day-label">Pull A + Legs A</div>
+            </div>
+            <span class="routine-set-count">15 sets</span>
+          </div>
+          <div class="routine-exercises">
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Lat Pulldown (Cable)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Seated Cable Row - V Grip</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Smith Machine Squat</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bulgarian Split Squat (Dumbbell)</span></div>
+          </div>
+          <div class="routine-muscles">
+            <span class="mpill" style="color:#00d4aa;border-color:#00d4aa;background:#00d4aa22">Espalda ×8</span>
+            <span class="mpill" style="color:#8b5cf6;border-color:#8b5cf6;background:#8b5cf622">Cuádriceps ×7</span>
+            <span class="mpill mpill-ind" style="color:#06b6d4;border-color:#06b6d4;background:#06b6d422">Bíceps (ind)</span>
+            <span class="mpill mpill-ind" style="color:#ec4899;border-color:#ec4899;background:#ec489922">Glúteos (ind)</span>
+          </div>
+        </div>
+
+        <!-- DÍA 3 -->
+        <div class="routine-card">
+          <div class="routine-card-header">
+            <div>
+              <div class="routine-day-num">Día 3</div>
+              <div class="routine-day-label">Push B + Accesorios</div>
+            </div>
+            <span class="routine-set-count">16 sets</span>
+          </div>
+          <div class="routine-exercises">
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Incline Bench Press (Dumbbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Chest Fly</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bicep Curl (Dumbbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Triceps Extension (Dumbbell)</span></div>
+          </div>
+          <div class="routine-muscles">
+            <span class="mpill" style="color:#3b82f6;border-color:#3b82f6;background:#3b82f622">Pecho ×7</span>
+            <span class="mpill" style="color:#f59e0b;border-color:#f59e0b;background:#f59e0b22">Hombros ×3</span>
+            <span class="mpill" style="color:#06b6d4;border-color:#06b6d4;background:#06b6d422">Bíceps ×3</span>
+            <span class="mpill" style="color:#a78bfa;border-color:#a78bfa;background:#a78bfa22">Tríceps ×3</span>
+          </div>
+        </div>
+
+        <!-- DÍA 4 -->
+        <div class="routine-card">
+          <div class="routine-card-header">
+            <div>
+              <div class="routine-day-num">Día 4</div>
+              <div class="routine-day-label">Pull B + Legs B</div>
+            </div>
+            <span class="routine-set-count">17 sets</span>
+          </div>
+          <div class="routine-exercises">
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bent Over Row (Barbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Romanian Deadlift (Barbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Seated Leg Curl (Machine)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Leg Extension (Machine)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span></div>
+          </div>
+          <div class="routine-muscles">
+            <span class="mpill" style="color:#00d4aa;border-color:#00d4aa;background:#00d4aa22">Espalda ×3</span>
+            <span class="mpill" style="color:#f97316;border-color:#f97316;background:#f9731622">Isquiotibiales ×7</span>
+            <span class="mpill" style="color:#8b5cf6;border-color:#8b5cf6;background:#8b5cf622">Cuádriceps ×3</span>
+            <span class="mpill" style="color:#10b981;border-color:#10b981;background:#10b98122">Abdominales ×4</span>
+            <span class="mpill mpill-ind" style="color:#06b6d4;border-color:#06b6d4;background:#06b6d422">Bíceps (ind)</span>
+            <span class="mpill mpill-ind" style="color:#ec4899;border-color:#ec4899;background:#ec489922">Glúteos (ind)</span>
+          </div>
+        </div>
+
+      </div><!-- /routine-grid -->
+    </div><!-- /split-4d -->
+
   </div>
 
   <!-- ── TAB: PROGRESO ── -->
@@ -464,35 +832,54 @@
 // ═══════════════════════════════════════════════════════════════
 
 const TABLE_GROUPS = {
-  "Bench Press (Barbell)":          [["Pecho", 1.0], ["Tríceps", 0.5]],
-  "Chest Fly (Machine)":            [["Pecho", 1.0]],
-  "Incline Bench Press (Dumbbell)": [["Pecho", 1.0], ["Tríceps", 0.5]],
-  "Lateral Raise (Dumbbell)":       [["Hombros", 1.0]],
-  "Face Pull":                      [["Hombros", 1.0]],
-  "Upright Row (Cable)":            [["Hombros", 1.0]],
-  "Upright Row (Barbell)":          [["Hombros", 1.0]],  // Hevy uses this name
-  "Cable Lateral Raise":            [["Hombros", 1.0]],
-  "Triceps Extension (Dumbbell)":   [["Tríceps", 1.0]],
-  "Lat Pulldown (Cable)":           [["Espalda", 1.0], ["Bíceps", 0.5]],
-  "Single Arm Cable Row":           [["Espalda", 1.0], ["Bíceps", 0.5]],
-  "Bent Over Row (Barbell)":        [["Espalda", 1.0], ["Bíceps", 0.5]],
-  "Bicep Curl (Dumbbell)":          [["Bíceps", 1.0]],
-  "Crunch (Weighted)":              [["Abdominales", 1.0]],
-  "Dragonfly":                      [["Abdominales", 1.0]],
-  "Side Bend (Dumbbell)":           [["Abdominales", 1.0]],
-  "Cable Woodchopper":              [["Abdominales", 1.0]],
-  "Romanian Deadlift (Barbell)":    [["Isquiotibiales", 1.0], ["Glúteos", 0.5]],
-  "Hip Thrust (Barbell)":           [["Glúteos", 1.0]],
-  "Bulgarian Split Squat":          [["Cuádriceps", 1.0], ["Glúteos", 0.5]],
-  "Bulgarian Split Squat (Dumbbell)":[["Cuádriceps", 1.0], ["Glúteos", 0.5]],
-  "Hack Squat (Machine)":           [["Cuádriceps", 1.0], ["Glúteos", 0.5]],
-  "Leg Extension (Machine)":        [["Cuádriceps", 1.0]],
-  "Seated Leg Curl (Machine)":      [["Isquiotibiales", 1.0]],
-  // Retired exercises — still count for the periods when they were performed
+  // ── Pecho ──────────────────────────────────────────────────────
+  "Bench Press (Barbell)":               [["Pecho", 1.0], ["Tríceps", 0.5]],
+  "Bench Press (Smith Machine)":         [["Pecho", 1.0], ["Tríceps", 0.5]],  // Copenhagen gym
+  "Incline Bench Press (Dumbbell)":      [["Pecho", 1.0], ["Tríceps", 0.5]],
+  "Incline Bench Press (Smith Machine)": [["Pecho", 1.0], ["Tríceps", 0.5]],  // briefly used, reverted
+  "Chest Fly (Machine)":                 [["Pecho", 1.0]],
+  "Chest Fly (Dumbbell)":                [["Pecho", 1.0]],                     // Copenhagen gym
+  // ── Hombros ────────────────────────────────────────────────────
+  "Lateral Raise (Dumbbell)":            [["Hombros", 1.0]],
+  "Cable Lateral Raise":                 [["Hombros", 1.0]],
+  "Single Arm Lateral Raise (Cable)":    [["Hombros", 1.0]],                   // Copenhagen gym
+  "Face Pull":                           [["Hombros", 1.0]],
+  "Upright Row (Cable)":                 [["Hombros", 1.0]],
+  "Cable Chest Fly":                     [["Pecho", 1.0]],                     // Copenhagen gym, replaces Upright Row D3
+  "Upright Row (Barbell)":               [["Hombros", 1.0]],
+  // ── Tríceps ────────────────────────────────────────────────────
+  "Triceps Extension (Dumbbell)":        [["Tríceps", 1.0]],
+  // ── Espalda ────────────────────────────────────────────────────
+  "Lat Pulldown (Cable)":                [["Espalda", 1.0], ["Bíceps", 0.5]],
+  "Single Arm Cable Row":                [["Espalda", 1.0], ["Bíceps", 0.5]],
+  "Seated Cable Row - V Grip (Cable)":   [["Espalda", 1.0], ["Bíceps", 0.5]], // Copenhagen gym
+  "Bent Over Row (Barbell)":             [["Espalda", 1.0], ["Bíceps", 0.5]],
+  // ── Bíceps ─────────────────────────────────────────────────────
+  "Bicep Curl (Dumbbell)":               [["Bíceps", 1.0]],
+  // ── Abdominales ────────────────────────────────────────────────
+  "Crunch (Weighted)":                   [["Abdominales", 1.0]],
+  "Dragonfly":                           [["Abdominales", 1.0]],
+  "Side Bend (Dumbbell)":                [["Abdominales", 1.0]],
+  "Cable Woodchopper":                   [["Abdominales", 1.0]],
+  "Cable Crunch":                        [["Abdominales", 1.0]],
+  // ── Glúteos / Isquios ──────────────────────────────────────────
+  "Romanian Deadlift (Barbell)":         [["Isquiotibiales", 1.0], ["Glúteos", 0.5]],
+  "Hip Thrust (Barbell)":                [["Glúteos", 1.0]],
+  "Cable Pull Through":                  [["Glúteos", 1.0]],                   // replaces Hip Thrust 2026-08-23
+  // ── Cuádriceps / Glúteos ───────────────────────────────────────
+  "Bulgarian Split Squat":               [["Cuádriceps", 1.0], ["Glúteos", 0.5]],
+  "Bulgarian Split Squat (Dumbbell)":    [["Cuádriceps", 1.0], ["Glúteos", 0.5]],
+  "Hack Squat (Machine)":                [["Cuádriceps", 1.0], ["Glúteos", 0.5]],
+  "Leg Press Horizontal (Machine)":      [["Cuádriceps", 1.0], ["Glúteos", 0.5]], // Copenhagen gym
+  "Smith Machine Squat":                 [["Cuádriceps", 1.0], ["Glúteos", 0.5]], // future / current Copenhagen
+  "Leg Extension (Machine)":             [["Cuádriceps", 1.0]],
+  "Seated Leg Curl (Machine)":           [["Isquiotibiales", 1.0]],
+  // ── Retired — still count for periods when performed ───────────
   "EZ Bar Biceps Curl":                        [["Bíceps", 1.0]],
   "Triceps Pushdown":                          [["Tríceps", 1.0]],
   "Seated Shoulder Press (Machine)":           [["Hombros", 1.0]],
   "Back Extension (Weighted Hyperextension)":  [["Glúteos", 0.5]],
+  "Standing Calf Raise (Dumbbell)":            [["Pantorrillas", 1.0]],
 };
 
 const PROGRESS_SECTIONS = [
@@ -516,26 +903,61 @@ const VOLUME_SECTIONS = [
   {
     header: "Tren superior — empuje",
     rows: [
-      { name: "Pecho",        total: 12, exercises: "Bench Press, Chest Fly, Incline Press" },
-      { name: "Hombros",      total: 12, exercises: "Lateral Raise, Face Pull, Upright Row, Cable Lat. Raise" },
-      { name: "Tríceps",      total: 11, exercises: "Bench Press (ind), Incline Press (ind), Triceps Ext" },
+      { name: "Pecho",   total: 15, exList: [
+          "Smith Bench Press ×4",
+          "Chest Fly (Dumbbell) ×4",
+          "Incline Press (Dumbbell) ×4",
+          "Cable Chest Fly ×3",
+        ]},
+      { name: "Hombros", total: 9, exList: [
+          "Lateral Raise (Cable) ×3 × 2 días",
+          "Face Pull ×3",
+        ]},
+      { name: "Tríceps", total: 11, exList: [
+          "Smith Bench Press ×4 (ind)",
+          "Incline Press (Dumbbell) ×4 (ind)",
+          "Triceps Extension ×3",
+        ]},
     ]
   },
   {
     header: "Tren superior — jalón",
     rows: [
-      { name: "Espalda",      total: 10, exercises: "Lat Pulldown, Cable Row, Bent Row" },
-      { name: "Bíceps",       total: 13, exercises: "Lat Pulldown (ind), Cable Row (ind), Bent Row (ind), Bicep Curl" },
-      { name: "Abdominales",  total: 10, exercises: "Crunch, Dragonfly, Woodchopper / Side Bend" },
+      { name: "Espalda",     total: 11, exList: [
+          "Lat Pulldown ×4",
+          "Seated Cable Row ×4",
+          "Bent Over Row ×3",
+        ]},
+      { name: "Bíceps",      total: 14, exList: [
+          "Lat Pulldown ×4 (ind)",
+          "Seated Cable Row ×4 (ind)",
+          "Bent Over Row ×3 (ind)",
+          "Bicep Curl ×3",
+        ]},
+      { name: "Abdominales", total: 8, exList: [
+          "Cable Crunch ×3 × 2 días",
+          "Dragonfly ×1 × 2 días",
+        ]},
     ]
   },
   {
     header: "Tren inferior",
     rows: [
-      { name: "Glúteos",         total: 15, exercises: "RDL (ind), Hip Thrust, BSS (ind), Hack Squat (ind)" },
-      { name: "Cuádriceps",      total: 10, exercises: "BSS, Hack Squat, Leg Extension" },
-      { name: "Isquiotibiales",  total: 7,  exercises: "RDL, Leg Curl" },
-      { name: "Pantorrillas",    total: 0,  exercises: "Standing Calf Raise", skipped: true },
+      { name: "Glúteos",        total: 11, priority: true, exList: [
+          "Romanian Deadlift ×4 (ind)",
+          "Smith Machine Squat ×4 (ind)",
+          "Bulgarian Split Squat ×3 (ind)",
+        ]},
+      { name: "Cuádriceps",     total: 10, exList: [
+          "Smith Machine Squat ×4",
+          "Bulgarian Split Squat ×3",
+          "Leg Extension ×3",
+        ]},
+      { name: "Isquiotibiales", total: 7,  exList: [
+          "Romanian Deadlift ×4",
+          "Leg Curl ×3",
+        ]},
+      { name: "Pantorrillas",   total: 0,  exList: ["Standing Calf Raise"], skipped: true },
     ]
   },
 ];
@@ -800,7 +1222,7 @@ function renderVolumeTable() {
           <td><div class="bar-wrap"><div class="bar-tick"></div></div></td>
           <td><span class="total-num" style="color:var(--muted)">—</span></td>
           <td><span class="objetivo-badge">10–20</span></td>
-          <td><span class="exercises-text">${row.exercises}</span></td>
+          <td><span class="exercises-text">${(row.exList || []).join('<br>')}</span></td>
           <td></td>
         </tr>`;
         continue;
@@ -808,8 +1230,11 @@ function renderVolumeTable() {
       const status = row.total >= 9 ? 'optimal' : 'below';
       const fillPct = Math.min(100, (row.total / 20) * 100).toFixed(1);
 
+      const priorityBadge = row.priority
+        ? `<span class="badge badge-blue" style="font-size:10px;">prioridad</span>`
+        : '';
       html += `<tr>
-        <td><span class="muscle-name">${row.name}</span></td>
+        <td><span class="muscle-name">${row.name} ${priorityBadge}</span></td>
         <td>
           <div class="bar-wrap">
             <div class="bar-fill ${status}" style="width:${fillPct}%"></div>
@@ -818,7 +1243,7 @@ function renderVolumeTable() {
         </td>
         <td><span class="total-num ${status}">${row.total}</span></td>
         <td><span class="objetivo-badge">10–20</span></td>
-        <td><span class="exercises-text">${row.exercises}</span></td>
+        <td><span class="exercises-text" style="line-height:1.8">${(row.exList || []).join('<br>')}</span></td>
         ${indexCell(row.name)}
       </tr>`;
     }
@@ -1044,6 +1469,17 @@ document.addEventListener('drop', e => {
   const reader = new FileReader();
   reader.onload = ev => processCSV(ev.target.result);
   reader.readAsText(file, 'utf-8');
+});
+
+// ── Split toggle ──
+document.querySelectorAll('.split-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const split = btn.dataset.split;
+    document.querySelectorAll('.split-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.split-section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('split-' + split).classList.add('active');
+  });
 });
 
 // ── Tabs ──
