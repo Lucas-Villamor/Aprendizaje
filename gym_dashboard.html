@@ -503,6 +503,8 @@
     text-align: right;
   }
   .routine-ex-name { color: var(--text); }
+  .routine-ex-reps { margin-left: auto; padding-left: 10px; font-variant-numeric: tabular-nums; font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .split-legend { font-size: 11px; color: var(--muted); margin: -6px 0 14px; }
   .routine-muscles {
     padding: 10px 16px 14px;
     border-top: 1px solid var(--border);
@@ -594,12 +596,106 @@
 
     <!-- Split toggle -->
     <div class="split-toolbar">
-      <button class="split-btn active" data-split="3d">★ 3 días <span class="split-active-badge">ACTIVA</span></button>
+      <button class="split-btn active" data-split="3s">★ 3 días corta <span class="split-active-badge">ACTIVA</span></button>
+      <button class="split-btn" data-split="3d">3 días (larga)</button>
       <button class="split-btn" data-split="4d">4 días</button>
     </div>
+    <div class="split-legend">×N = sets por ejercicio · a la derecha, rango de repeticiones por set</div>
 
-    <!-- ═══ 3-DAY SPLIT (default, visible) ═══ -->
-    <div id="split-3d" class="split-section active">
+    <!-- ═══ 3-DAY SHORT SPLIT (ACTIVE, default visible) ═══ -->
+    <div id="split-3s" class="split-section active">
+      <div class="routine-note">
+        <b>3 días / semana — versión corta.</b> 16–20 sets por sesión (~50–60 min). Ejercicios ordenados por prioridad:
+        si hay que recortar, se recorta desde abajo. <b>Sesión mínima</b> (día de poca motivación): los 3 primeros ejercicios.
+        <b>Tope de tiempo:</b> ~60 min. Esfuerzo: series previas a ~2 reps del fallo; última serie a 0–1 en aislamientos y 1–2 en compuestos pesados; nunca fallo en la serie 1 (registrar RPE en Hevy). Sube peso al llegar al tope del rango en todas las series.
+        Ejemplo: martes · miércoles · viernes. Día 1 (sentadilla) y Día 2 (RDL) son consecutivos — si el RDL se resiente, pasar el Día 2 al jueves.
+        Fijo durante 8 semanas.
+      </div>
+      <div class="routine-grid-3">
+
+        <!-- DÍA 1 (corta) -->
+        <div class="routine-card">
+          <div class="routine-card-header">
+            <div>
+              <div class="routine-day-num">Día 1</div>
+              <div class="routine-day-label">Empuje + Sentadilla + Abs</div>
+            </div>
+            <span class="routine-set-count">17 sets</span>
+          </div>
+          <div class="routine-exercises">
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Bench Press (Smith Machine)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Smith Machine Squat</span><span class="routine-ex-reps">6-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Triceps Extension (Dumbbell)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span><span class="routine-ex-reps">10-15 reps</span></div>
+          </div>
+          <div class="routine-muscles">
+            <span class="mpill" style="color:#8b5cf6;border-color:#8b5cf6;background:#8b5cf622">Cuádriceps ×4</span>
+            <span class="mpill" style="color:#3b82f6;border-color:#3b82f6;background:#3b82f622">Pecho ×4</span>
+            <span class="mpill" style="color:#f59e0b;border-color:#f59e0b;background:#f59e0b22">Hombros ×3</span>
+            <span class="mpill" style="color:#a78bfa;border-color:#a78bfa;background:#a78bfa22">Tríceps ×3</span>
+            <span class="mpill" style="color:#10b981;border-color:#10b981;background:#10b98122">Abdominales ×3</span>
+            <span class="mpill mpill-ind" style="color:#ec4899;border-color:#ec4899;background:#ec489922">Glúteos (ind)</span>
+          </div>
+        </div>
+
+        <!-- DÍA 2 (corta) -->
+        <div class="routine-card">
+          <div class="routine-card-header">
+            <div>
+              <div class="routine-day-num">Día 2</div>
+              <div class="routine-day-label">Bisagra + Jalón</div>
+            </div>
+            <span class="routine-set-count">18 sets</span>
+          </div>
+          <div class="routine-exercises">
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Romanian Deadlift (Barbell)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Lat Pulldown (Cable)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Seated Cable Row - V Grip</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Seated Leg Curl (Machine)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bicep Curl (Dumbbell)</span><span class="routine-ex-reps">10-15 reps</span></div>
+          </div>
+          <div class="routine-muscles">
+            <span class="mpill" style="color:#f97316;border-color:#f97316;background:#f9731622">Isquiotibiales ×7</span>
+            <span class="mpill" style="color:#00d4aa;border-color:#00d4aa;background:#00d4aa22">Espalda ×8</span>
+            <span class="mpill" style="color:#06b6d4;border-color:#06b6d4;background:#06b6d422">Bíceps ×3</span>
+            <span class="mpill mpill-ind" style="color:#ec4899;border-color:#ec4899;background:#ec489922">Glúteos (ind)</span>
+          </div>
+        </div>
+
+        <!-- DÍA 3 (corta) -->
+        <div class="routine-card">
+          <div class="routine-card-header">
+            <div>
+              <div class="routine-day-num">Día 3</div>
+              <div class="routine-day-label">Incline + Hombros + Dorsales + Cuádriceps + Abs</div>
+            </div>
+            <span class="routine-set-count">19 sets</span>
+          </div>
+          <div class="routine-exercises">
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Incline Bench Press (Dumbbell)</span><span class="routine-ex-reps">8-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Lat Pulldown (Cable)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Overhead Press (Barbell)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Leg Extension (Machine)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span><span class="routine-ex-reps">10-15 reps</span></div>
+          </div>
+          <div class="routine-muscles">
+            <span class="mpill" style="color:#3b82f6;border-color:#3b82f6;background:#3b82f622">Pecho ×4</span>
+            <span class="mpill" style="color:#f59e0b;border-color:#f59e0b;background:#f59e0b22">Hombros ×6</span>
+            <span class="mpill" style="color:#00d4aa;border-color:#00d4aa;background:#00d4aa22">Espalda ×3</span>
+            <span class="mpill" style="color:#8b5cf6;border-color:#8b5cf6;background:#8b5cf622">Cuádriceps ×3</span>
+            <span class="mpill" style="color:#10b981;border-color:#10b981;background:#10b98122">Abdominales ×3</span>
+            <span class="mpill mpill-ind" style="color:#a78bfa;border-color:#a78bfa;background:#a78bfa22">Tríceps (ind)</span>
+            <span class="mpill mpill-ind" style="color:#06b6d4;border-color:#06b6d4;background:#06b6d422">Bíceps (ind)</span>
+          </div>
+        </div>
+
+      </div><!-- /routine-grid-3 -->
+    </div><!-- /split-3s -->
+
+    <!-- ═══ 3-DAY SPLIT (larga, referencia) ═══ -->
+    <div id="split-3d" class="split-section">
       <div class="routine-note">
         <b>3 días / semana.</b> Todos los ejercicios del split de 4 días, redistribuidos.
         <b>Día A + Día B</b> son seguros para hacer consecutivos — sin solapamiento muscular directo.
@@ -614,17 +710,17 @@
               <div class="routine-day-num">Día A</div>
               <div class="routine-day-label">Upper + Accesorios</div>
             </div>
-            <span class="routine-set-count">22 sets</span>
+            <span class="routine-set-count">24 sets</span>
           </div>
           <div class="routine-exercises">
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Bench Press (Smith Machine)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Chest Fly (Dumbbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Face Pull</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bicep Curl (Dumbbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Triceps Extension (Dumbbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Bench Press (Smith Machine)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Chest Fly (Dumbbell)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Face Pull</span><span class="routine-ex-reps">12-20 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bicep Curl (Dumbbell)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Triceps Extension (Dumbbell)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span><span class="routine-ex-reps">máx reps</span></div>
           </div>
           <div class="routine-muscles">
             <span class="mpill" style="color:#3b82f6;border-color:#3b82f6;background:#3b82f622">Pecho ×8</span>
@@ -645,13 +741,13 @@
             <span class="routine-set-count">21 sets</span>
           </div>
           <div class="routine-exercises">
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Smith Machine Squat</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bulgarian Split Squat (Dumbbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Romanian Deadlift (Barbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Seated Leg Curl (Machine)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Leg Extension (Machine)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Smith Machine Squat</span><span class="routine-ex-reps">6-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bulgarian Split Squat (Dumbbell)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Romanian Deadlift (Barbell)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Seated Leg Curl (Machine)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Leg Extension (Machine)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span><span class="routine-ex-reps">máx reps</span></div>
           </div>
           <div class="routine-muscles">
             <span class="mpill" style="color:#8b5cf6;border-color:#8b5cf6;background:#8b5cf622">Cuádriceps ×10</span>
@@ -671,12 +767,12 @@
             <span class="routine-set-count">21 sets</span>
           </div>
           <div class="routine-exercises">
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Incline Bench Press (Dumbbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Chest Fly</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Lat Pulldown (Cable)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Seated Cable Row - V Grip</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bent Over Row (Barbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Incline Bench Press (Dumbbell)</span><span class="routine-ex-reps">8-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Chest Fly</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Lat Pulldown (Cable)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Seated Cable Row - V Grip</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bent Over Row (Barbell)</span><span class="routine-ex-reps">8-12 reps</span></div>
           </div>
           <div class="routine-muscles">
             <span class="mpill" style="color:#3b82f6;border-color:#3b82f6;background:#3b82f622">Pecho ×7</span>
@@ -707,12 +803,12 @@
             <span class="routine-set-count">18 sets</span>
           </div>
           <div class="routine-exercises">
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Bench Press (Smith Machine)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Chest Fly (Dumbbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Face Pull</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Bench Press (Smith Machine)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Chest Fly (Dumbbell)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Face Pull</span><span class="routine-ex-reps">12-20 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span><span class="routine-ex-reps">máx reps</span></div>
           </div>
           <div class="routine-muscles">
             <span class="mpill" style="color:#3b82f6;border-color:#3b82f6;background:#3b82f622">Pecho ×8</span>
@@ -732,10 +828,10 @@
             <span class="routine-set-count">15 sets</span>
           </div>
           <div class="routine-exercises">
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Lat Pulldown (Cable)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Seated Cable Row - V Grip</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Smith Machine Squat</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bulgarian Split Squat (Dumbbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Lat Pulldown (Cable)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Seated Cable Row - V Grip</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Smith Machine Squat</span><span class="routine-ex-reps">6-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bulgarian Split Squat (Dumbbell)</span><span class="routine-ex-reps">8-12 reps</span></div>
           </div>
           <div class="routine-muscles">
             <span class="mpill" style="color:#00d4aa;border-color:#00d4aa;background:#00d4aa22">Espalda ×8</span>
@@ -755,11 +851,11 @@
             <span class="routine-set-count">16 sets</span>
           </div>
           <div class="routine-exercises">
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Incline Bench Press (Dumbbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Chest Fly</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bicep Curl (Dumbbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Triceps Extension (Dumbbell)</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Incline Bench Press (Dumbbell)</span><span class="routine-ex-reps">8-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Single Arm Lateral Raise (Cable)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Chest Fly</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bicep Curl (Dumbbell)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Triceps Extension (Dumbbell)</span><span class="routine-ex-reps">10-15 reps</span></div>
           </div>
           <div class="routine-muscles">
             <span class="mpill" style="color:#3b82f6;border-color:#3b82f6;background:#3b82f622">Pecho ×7</span>
@@ -779,12 +875,12 @@
             <span class="routine-set-count">17 sets</span>
           </div>
           <div class="routine-exercises">
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bent Over Row (Barbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Romanian Deadlift (Barbell)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Seated Leg Curl (Machine)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Leg Extension (Machine)</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span></div>
-            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Bent Over Row (Barbell)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×4</span><span class="routine-ex-name">Romanian Deadlift (Barbell)</span><span class="routine-ex-reps">8-12 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Seated Leg Curl (Machine)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Leg Extension (Machine)</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×3</span><span class="routine-ex-name">Cable Crunch</span><span class="routine-ex-reps">10-15 reps</span></div>
+            <div class="routine-ex-row"><span class="routine-ex-sets">×1</span><span class="routine-ex-name">Dragonfly</span><span class="routine-ex-reps">máx reps</span></div>
           </div>
           <div class="routine-muscles">
             <span class="mpill" style="color:#00d4aa;border-color:#00d4aa;background:#00d4aa22">Espalda ×3</span>
@@ -844,6 +940,7 @@ const TABLE_GROUPS = {
   "Cable Lateral Raise":                 [["Hombros", 1.0]],
   "Single Arm Lateral Raise (Cable)":    [["Hombros", 1.0]],                   // Copenhagen gym
   "Face Pull":                           [["Hombros", 1.0]],
+  "Overhead Press (Barbell)":            [["Hombros", 1.0], ["Tríceps", 0.5]], // 3-day short split; PROVISIONAL Hevy title — verify against workout_data.csv after first log
   "Upright Row (Cable)":                 [["Hombros", 1.0]],
   "Cable Chest Fly":                     [["Pecho", 1.0]],                     // Copenhagen gym, replaces Upright Row D3
   "Upright Row (Barbell)":               [["Hombros", 1.0]],
@@ -899,7 +996,8 @@ const PROGRESS_SECTIONS = [
 
 const ALL_GROUPS = PROGRESS_SECTIONS.flatMap(s => s.groups);
 
-const VOLUME_SECTIONS = [
+// Previous 3-day (long) split — kept for reference, not rendered.
+const VOLUME_SECTIONS_3D_LONG = [
   {
     header: "Tren superior — empuje",
     rows: [
@@ -956,6 +1054,64 @@ const VOLUME_SECTIONS = [
       { name: "Isquiotibiales", total: 7,  exList: [
           "Romanian Deadlift ×4",
           "Leg Curl ×3",
+        ]},
+      { name: "Pantorrillas",   total: 0,  exList: ["Standing Calf Raise"], skipped: true },
+    ]
+  },
+];
+
+// ACTIVE: 3-day SHORT split (from 2026-09-30). Rendered in the Volumen tab.
+const VOLUME_SECTIONS = [
+  {
+    header: "Tren superior — empuje",
+    rows: [
+      { name: "Pecho",   total: 8, exList: [
+          "Smith Bench Press ×4 · 8–12 reps",
+          "Incline Press (Dumbbell) ×4 · 8–15 reps",
+        ]},
+      { name: "Hombros", total: 9, exList: [
+          "Lateral Raise (Cable) ×3 × 2 días · 10–15 reps",
+          "Overhead Press (Barbell) ×3 · 8–12 reps",
+        ]},
+      { name: "Tríceps", total: 14, exList: [
+          "Smith Bench Press ×4 (ind)",
+          "Incline Press (Dumbbell) ×4 (ind)",
+          "Overhead Press ×3 (ind)",
+          "Triceps Extension ×3 · 10–15 reps",
+        ]},
+    ]
+  },
+  {
+    header: "Tren superior — jalón",
+    rows: [
+      { name: "Espalda",     total: 11, exList: [
+          "Lat Pulldown ×4 (Día 2) + ×3 (Día 3) · 8–12 reps",
+          "Seated Cable Row ×4 · 10–15 reps",
+        ]},
+      { name: "Bíceps",      total: 14, exList: [
+          "Lat Pulldown ×7 (ind)",
+          "Seated Cable Row ×4 (ind)",
+          "Bicep Curl ×3 · 10–15 reps",
+        ]},
+      { name: "Abdominales", total: 6, exList: [
+          "Cable Crunch ×3 × 2 días · 10–15 reps",
+        ]},
+    ]
+  },
+  {
+    header: "Tren inferior",
+    rows: [
+      { name: "Glúteos",        total: 8, priority: true, exList: [
+          "Romanian Deadlift ×4 (ind)",
+          "Smith Machine Squat ×4 (ind)",
+        ]},
+      { name: "Cuádriceps",     total: 7, exList: [
+          "Smith Machine Squat ×4 · 6–12 reps",
+          "Leg Extension ×3 · 10–15 reps",
+        ]},
+      { name: "Isquiotibiales", total: 7,  exList: [
+          "Romanian Deadlift ×4 · 8–12 reps",
+          "Leg Curl ×3 · 10–15 reps",
         ]},
       { name: "Pantorrillas",   total: 0,  exList: ["Standing Calf Raise"], skipped: true },
     ]
